@@ -1,4 +1,9 @@
-## 💭 이 레포는 뭐냐면...
+<div align=center>
+  <img src="https://github.com/user-attachments/assets/702cadf4-4ec8-4b0d-b433-9f0d23e9ad6e" width="100%" />
+</div>
+<br />
+
+## 💭 이 레포는
 
 모던 자바스크립트 Deep Dive 책을 읽으면서  
 직접 디버깅 해보고 눈으로 읽어보고 소리내어 읽어보고 글로 써보고 <br />
