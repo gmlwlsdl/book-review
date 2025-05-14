@@ -1,7 +1,11 @@
+# Javascript의 Data Type
+
 JS ES6는 7개의 데이터 타입을 제공한다. <br />
 7개의 데이터 타입은 primitive type과 object/reference type으로 분류할 수 있다.
 
-![타입 표 이미지]()
+<div width="150px">
+  <img src="https://github.com/user-attachments/assets/2c96b17f-3da6-4c08-9c35-2dafa88454c1" width="60%" />
+</div>
 
 # 6-1. 숫자 타입
 
@@ -51,6 +55,20 @@ JS의 문자열은 원시 타입이고, 변경 불가능한 **Immutable Value** 
 
 # 6-3. 템플릿과 리터럴
 
+```js
+// 템플릿 리터럴을 사용하여 개행을 자유롭게 표현할 수 있다.
+const multiLineStr = `첫 번째 줄
+두 번째 줄
+세 번째 줄`;
+console.log(multiLineStr);
+/*
+출력:
+첫 번째 줄
+두 번째 줄
+세 번째 줄
+*/
+```
+
 ES6부터 템플릿 리터럴(Template literal)이라는 새로운 문자열 표기법이 도입되었다. <br />
 멀티 라인 문자열, 표현식 삽입, 태그드 템플릿 등 편리한 문자열 처리 기능을 제공한다. <br />
 벡틱을 사용하여 표현한다.
@@ -75,10 +93,30 @@ ES6부터 템플릿 리터럴(Template literal)이라는 새로운 문자열 표
 
 ## 6-3-2. 표현식 삽입
 
+```js
+const weather = "Cloudy";
+const date = 14;
+
+const newSyntax = `날씨: ${weather}, 요일: ${date}알`;
+console.log(newSyntax);
+// 출력: 이름: Cloudy, 나이: 14일
+```
+
 템플릿 문자열 내에서 사용해야 하고, 일반 문자열에서의 표현식 삽입은 문자열로 취급된다.
 <br />
 
 # 6-4. 불리언 타입
+
+```js
+const score = 70;
+
+if (score >= 70) {
+    console.log("합격입니다.");
+} else {
+    console.log("불합격입니다.");
+}
+// 출력: 합격입니다.
+```
 
 조건문에서 자주 사용된다.
 <br />
