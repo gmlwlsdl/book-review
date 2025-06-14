@@ -1,5 +1,5 @@
 <div align=center>
-  <img src="https://i.namu.wiki/i/IfXkqMn-zlpAxpxGxB2IiM7tepJqdxWZdVMWR3JH_H23m4d7IMpr6h6SSrkgHfROkb1yZHQhMSd9SRPs9mMnf9Whzx5rtyeO2ofF6Q5FIwUnTLtvfY0e2g38gysbS0GfuJ1m_aCf2du-btEUtlgq0g.webp" width="100%" />
+  <img src="https://github.com/user-attachments/assets/3d5d6bec-0e3d-48b5-a91f-0f7c82ecc9da" width="100%" />
 </div>
 <br />
 
