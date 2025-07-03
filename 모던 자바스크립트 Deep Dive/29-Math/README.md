@@ -72,20 +72,15 @@
 
    다만,,, 보안에 적합하지 않아서 보안용 랜덤은 `crypto.getRandomValues()`를 사용해야 한다.
 
-<aside>
-🥲
-
-**`Math.round()`랑 `Math.ceil()`의 차이점이 뭐냠?**
-
-1. `Math.round()`는
-
-   0.5를 기준으로 반올림을 수행하고
-
-2. `Math.ceil()`은
-
-   무조건 올린다.
-
-</aside>
+> 🥲 **`Math.round()`랑 `Math.ceil()`의 차이점이 뭐냠?**
+>
+> > 1.  `Math.round()`는
+> >
+> >     0.5를 기준으로 반올림을 수행하고
+> >
+> > 2.  `Math.ceil()`은
+> >
+> >     무조건 올린다.
 
 1. **Math.pow(base, exponent)**
 
