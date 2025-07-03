@@ -21,23 +21,18 @@
    console.log(str2) // String { "hello" }
    ```
 
-   <aside>
-   🥲
-
-   **왜 `new String()`으로 생성하면 `typeof` 가 object인 거지?**
-
-   JS에는 원시 타입이 있고 객체 타입이 있는데
-
-   코드로 차이를 보면 아래와 같고
-
-   ```jsx
-   const str1 = 'hello' // 원시 타입 (string)
-   const str2 = new String('hello') // 객체 타입 (String 객체)
-   ```
-
-   따라서 new String은 객체를 생성하기 때문에 typeof 가 object임!
-
-   </aside>
+   > 🥲 **왜 `new String()`으로 생성하면 `typeof` 가 object인 거지?**
+   >
+   > > JS에는 원시 타입이 있고 객체 타입이 있는데
+   > >
+   > > 코드로 차이를 보면 아래와 같고
+   > >
+   > > ```jsx
+   > > const str1 = 'hello' // 원시 타입 (string)
+   > > const str2 = new String('hello') // 객체 타입 (String 객체)
+   > > ```
+   > >
+   > > 따라서 new String은 객체를 생성하기 때문에 typeof 가 object임!
 
 3. String() 함수 호출 → typeof 하면 string
 
@@ -62,12 +57,7 @@
    'hello world'.slice(-5) // 'world'
    ```
 
-   <aside>
-   🥲
-
-   `substring()`과 유사하지만, substring은 **음수가 불가하다!**
-
-   </aside>
+   > 🥲 `substring()`과 유사하지만, substring은 **음수가 불가하다!**
 
 2. **toUpperCase(), toLowerCase()**
 
