@@ -55,7 +55,7 @@ class MyCollection {
 }
 ```
 
-> 🤓 [🔗 제너레이터 함수는 화살표 함수로 정의할 수 없으며,](https://www.notion.so/46-async-await-23210e12f8ca80bfbc66e0bcc8179989?pvs=21)
+> 🤓 제너레이터 함수는 화살표 함수로 정의할 수 없으며,
 >
 > new 연산자와 함께 생성자 함수로 호출할 수 없다.
 
