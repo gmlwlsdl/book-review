@@ -207,3 +207,80 @@ function calculateArea(shape: Shape) {
   }
 }
 ```
+
+---
+
+위에서 계속 언급한 것처럼, **타입 연산은 런타임에 영향을 주지 않는다.** <br />
+예시로 다음과 같은 코드를 살펴보자.
+
+```ts
+function asNumber(val: number | string): number {
+  return val as number // 'as number'는 '타입 단언문'이다.
+}
+```
+
+위 코드는 아래의 자바스크립트 코드로 변환된다. <br />
+모든 타입 관련 연산은 사라지게 된다.
+
+```js
+function asNumber(val) {
+  return val
+}
+```
+
+따라서 타입 체커 통과 및 값 정제를 위해서는 다음과 같이 타입스크립트 코드를 작성해야 한다.
+
+```ts
+function asNumber(val: number | string): number {
+  return typeof val === 'string' ? Number(val) : val
+}
+```
+
+---
+
+타입스크립트는 함수 오버로딩을 지원하지만, 타입 수준에서만 가능하다. <br />
+여러 개의 함수를 따로 구현하는 것이 아니라, 하나의 함수 구현체에 여러 개의 타입 선언을 연결해야 한다.
+
+잘못된 예시(함수 오버로딩) 🙅🏻‍♀️
+
+```ts
+function add(a: number, b: number) {
+  return a + b
+}
+function add(a: string, b: string) {
+  return a + b
+}
+```
+
+올바른 예시(구현체) 🙆🏻‍♀️ <br />
+1, 2번 라인은 함수 선언이다. add 함수의 매개변수에 대한 반환 값을 알려주는 역할을 하며, 컴파일 후 사라진다. <br />
+4번째 라인은 함수 구현체(implement)이다. 런타임에 실제로 실행되는 코드이다.
+
+```ts
+function add(a: number, b: number): number
+function add(a: string, b: string): string
+
+function add(a: any, b: any): any {
+  return a + b
+}
+```
+
+> **'`any`는 쓰면 안 되는 거 아닌가?'** 라는 생각이 들었다.
+>
+> > 다만 위 코드에서 `any`를 쓰는 이유는
+> >
+> > 1.  `a + b` 연산이 `number`일 때와 `string`인 두 경우 모두에서 유효하기 때문이다.
+> >
+> > 2.  `a`와 `b`가 number일 때와 `string`일 때를 모두 한 함수에서 처리하기 위해 가장 넓은 범위를 포괄하는 타입이 필요했기 때문이다.
+
+---
+
+타입과 타임 검사는 코드의 런타임 성능(실행 속도)에 전혀 영향을 주지 않는다고 한다. <br />
+실제 런타임엔 모든 타입 정보가 제거된 자바스크립트 코드가 동작하기 때문이다.
+
+책에서는 '빌드타임 오버헤드'를 언급한다. <br />
+'빌드타임 오버헤드'란 타입스크립트 코드가 자바스크립트 코드로 변환되는 과정, 즉 컴파일하는데 걸리는 시간을 의미한다.
+
+타입스크립트 팀은 이 빌드타임을 최소화하기 위해, 코드가 조금만 바뀌었을 때 전체 코드를 다시 컴파일하지 않고, 변경된 부분만 빠르게 처리하는 증분(incremental) 빌드를 통해 오버헤드를 줄인다고 한다.
+
+만약 타입 체크 과정이 너무 오래 걸리면 타입 체크는 건너뛰고 트랜스파일 기능만 사용할 수도 있다고 한다. -> `transpileOnly 설정`
