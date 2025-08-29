@@ -38,20 +38,24 @@ function restOfPath(path: string) {
 
 ![Go to Definition](image-2.png)
 
-`lib.dom.d.ts`에 `fetch`는 다음과 같이 선언되어 있다.
-![fetch 함수 선언](image-3.png)
-fetch 함수의 이름, 매개변수들과 반환하는 타입이 명시되어 있다.
+1. `lib.dom.d.ts`에 `fetch`는 다음과 같이 선언되어 있다.
+   ![fetch 함수 선언](image-3.png)
 
-`fetch`의 첫 번째 매개변수인 `RequestInfo`는 다음과 같이 선언되어 있다.
-![RequestInfo 타입 선언](image-4.png)
-`RequestInfo`는 `Request` 또는 `string` 타입 중 하나가 될 수 있는 유니온 타입이다.
+   fetch 함수의 이름, 매개변수들과 반환하는 타입이 명시되어 있다.
 
-Request의 타입 선언은 다음과 같이 선언되어 있다.
-![Request 타입 선언](image-5.png)
-여기서 `Request` 타입과 값은 분리되어 있다. <br />
-line 19822의 `var Request`는 **`Request`가 값으로 존재**한다는 것을 선언한다. <br />
-line 19823의 `prototype: Request`는 **`Request` 생성자가 만들어내는 인스턴스들의 프로톼입**을 가리킨다. <br />
-line 19824의 `new(input: RequestInfo, init?: RequestInit): Request;`는 `Request` 생성자가 **`RequestInfo`와 R`equestInit`을 받아 `Request` 타입의 객체를 반환**한다는 것을 명시한다.
+2. `fetch`의 첫 번째 매개변수인 `RequestInfo`는 다음과 같이 선언되어 있다.
+   ![RequestInfo 타입 선언](image-4.png)
+
+   `RequestInfo`는 `Request` 또는 `string` 타입 중 하나가 될 수 있는 유니온 타입이다.
+
+3. Request의 타입 선언은 다음과 같이 선언되어 있다.
+   ![Request 타입 선언](image-5.png)
+
+   여기서 `Request` 타입과 값은 분리되어 있다.
+
+   **line 19822**의 `var Request`는 **`Request`가 값으로 존재**한다는 것을 선언한다. <br />
+   **line 19823**의 `prototype: Request`는 **`Request` 생성자가 만들어내는 인스턴스들의 프로톼입**을 가리킨다. <br />
+   **line 19824**의 `new(input: RequestInfo, init?: RequestInit): Request;`는 `Request` 생성자가 **`RequestInfo`와 R`equestInit`을 받아 `Request` 타입의 객체를 반환**한다는 것을 명시한다.
 
 > **`type`, `interface`, `declare의` 차이에 대하여**
 >
