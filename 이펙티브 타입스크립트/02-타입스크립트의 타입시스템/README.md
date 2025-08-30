@@ -401,3 +401,78 @@ function processData({ name, age }: { name: string; age: number }) {
 
 processData({ name: 'hazel', age: 90 })
 ```
+
+# Item 09. 타입 단언보다는 타입 선언을 이용하기
+
+타입스크립트에서 타입을 부여하는 방법은 두 가지이다. **두 방법은 결과가 같아보이지만 그렇지 않다.** <br />
+결론적으로, 타입 선언을 사용하는 것이 더 낫다고 한다. <br />
+**타입 단언**은 **강제로 타입을 지정**하는 것이므로 타입 체커에게 오류를 무시하라고 하는 것과 같기 때문이다. <br />
+반면 **타입 선언**은 할당되는 값이 해당 인터페이스를 만족하는지 검사하기 때문에 더욱 안전하다.
+
+1. 타입 선언
+   값이 선언된 타입임을 명시한다.
+
+```ts
+const apple: Fruit = {
+  name: 'apple',
+}
+```
+
+2. 타입 단언
+   타입스크립트가 추론한 타입이 있어도 Fruit으로 간주한다.
+
+```ts
+const grape = {
+  name: 'grape',
+} as Fruit
+```
+
+---
+
+### 화살표 함수에서의 타입 선언은 모호하기 때문에, 안전하게 타입을 명시해야 한다.
+
+```ts
+;['orange', 'peach', 'kiwi'].map((name) => ({ name }))
+
+/* 개발자는 Fruit 인터페이스를 쓰고 싶은데
+타입스크립트는 결과가 {name: string} 타입이라고 추론함 */
+```
+
+이런 경우에 **타입 단언(`as Fruit`)** 을 쓰면, 강제로 타입을 단언하는 것이 되고, 타입스크립트는 타입 안전성 검사를 건너뛴다. _이거슨 위험하다..._
+
+```ts
+const fruits = ['orange', 'peach', 'kiwi'].map((name) => ({} as Fruit)) // 정상 작동
+```
+
+타입 단언의 위험을 피하면서 의도를 명확히 하는 방법은 **화살표 함수의 반환 타입을 명시**하는 것이다.
+
+```ts
+// 반환 타입 명시
+const fruits = ['orange', 'peach', 'kiwi'].map((name): Fruit => ({ name }))
+
+// 콜백함수가 반환하는 타입과 변수에 할당하려는 타입이 일치하는지 검사
+const fruits: Fruit[] = ['orange', 'peach', 'kiwi'].map(
+  (name): Fruit => ({ name })
+)
+```
+
+그러나 타입스크립트는 컴파일 시점에 DOM에 접근할 수는 없으므로, 개발자가 타입 추론보다 더 정확한 정보를 알고있을 땐 타입 단언이 필요하다. (Item 55에서 더욱 자세히 다룬다.)
+
+타입 단언은 모든 타입을 다른 타입으로 변환하는 만능 도구가 아니다. <br />
+따라서 타입스크립트는 **한 타입이 다른 타입의 서브 타입일 때만 타입 단언을 허용**하는 규칙을 가진다. <br />
+
+```ts
+interface Fruit {
+  name: string
+}
+
+const body = document.body
+const el = body as Fruit // 오류 발생
+```
+
+`HTMLElement`와 `Fruit`은 서로 관련이 없기 때문에, 타입스크립트는 이를 실수로 간주하고 오류를 발생시킨다. <br />
+이럴 땐 `unknown` 타입을 중간에 사용하면 된다. 모든 타입은 `unknown`의 서브 타입이기 때문이다.
+
+```ts
+const el = body as unknown as Person
+```
