@@ -476,3 +476,22 @@ const el = body as Fruit // 오류 발생
 ```ts
 const el = body as unknown as Person
 ```
+
+# Item 10. 객체 래퍼 타입 피하기
+
+자바스크립트에는 객체와 구분되는 7가지 **기본형** 이 있다. ex) `string`, `number`, `boolean`, ... <br />
+위 기본형들은 불변하며 메서드를 갖지 않는 특징이 있다.
+
+근데 우리는 `“primitive”.charAt(3)` 처럼 기본형에 메서드를 사용할 수 있다. <br />
+이것은 자바스크립트 엔진 떄문인데, 자바스크립트는 기본형 값에 메서드가 호출되면, 일시적으로 **`String`** 같은 객체 래퍼로 변환하여 메서드를 실행한다. 그 뒤에는 래핑한 객체를 버린다.
+
+타입스크립트는 기본형과 객체 래퍼 타입을 별도로 구분한다. <br />
+따라서 `string`과 `String`은 다른 타입이다.
+
+1. **`string`**: `"hello"`와 같은 **기본형**을 나타낸다.
+2. **`String`**: `new String("hello")`와 같은 **객체**를 나타낸다.
+
+> 이 외에도 `number`와 `Number`, `boolean`과 `Boolean`, `symbol`과 `Symbol`, `bigint`와 `BigInt` 등이 있다.
+
+위 두 타입은 서로 호환되지 않기 때문에 문제를 일으킬 수 있다. <br />
+충돌을 피하기 위해서는 기본형 타입을 사용하는 것이 가장 좋고, 굳이 객체 래퍼를 직접 생성하는 것은 권장되지 않는다. ex) `new String()`, `new Number()`, ...
