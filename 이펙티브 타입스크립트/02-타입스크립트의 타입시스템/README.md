@@ -271,3 +271,133 @@ const double: [number, number] = triple // Error: Type '[number, number, number]
 위 코드의 `const double: [number, number] = triple;` 부분에서 오류가 발생하는 이유는 `triple`의 타입이 `length` 속성으로 `3`을 가지고 있는데, `double`의 타입은 `length` 속성으로 `2`를 요구하기 때문이다. `length` 속성 값이 서로 다르므로 타입이 호환되지 않는다고 판단하는 것이다.
 
 이러한 모델링 방식 덕분에 튜플의 고정된 길이를 보장하여 타입 안전성을 높일 수 있다. 배열의 길이가 변경되거나 잘못된 인덱스에 접근하려고 할 때 컴파일 타임에 오류를 잡아낼 수 있다.
+
+# Item 08. 타입 공간과 값 공간의 심벌 구분하기
+
+> **심벌(Symbol)이란?**
+>
+> 변수, 함수, 클래스, 타입 등 코드에서 사용하는 모든 이름을 의미한다.
+
+### 타입스크립트에서 심벌은 두 가지 다른 공간에 분리되어 존재한다.
+
+1. **타입 공간**: 타입 시스템에서만 존재하는 심벌 _ex) interface, type, ..._
+2. **값 공간**: 자바스크립트가 인식하고, 실제 런타임에 존재하는 심벌 _ex) const, let, var, function, class, ..._
+
+🔗 [Typescript Playground](https://www.typescriptlang.org/play/) 를 이용하면 타입스크립트 소스로부터 변환된 자바스크립트를 볼 수 있다. 변환된 자바스크립트에서 사라진 심벌은 타입에 해당되는 것을 알 수 있다.
+
+![타입스크립트 플레이그라운드 활용](image-7.png)
+
+<br />
+
+### `class`와 `enum`은 타입과 값 두 가지 역할을 동시에 수행한다. <br />
+
+1. `class`가 **타입**으로 사용될 때는, 구조(속성, 메서드)를 참조한다.
+2. `class`가 **값**으로 사용될 때는, 생성자 함수로서 객체를 생성하는 데 사용된다.
+
+`typeof` 연산자도 타입과 값 두 공간에서 다르게 동작한다.
+
+1. **값** 공간에서의 `typeof`: 변수의 런타임 데이터 타입을 문자열로 반환한다.
+2. **타입** 공간에서의 `typeof`: 값의 타입을 추출하여 타입스크립트 타입으로 반환한다.
+
+### `typeof`뿐만 아니라, `InstanceType`을 통해서도 **생성자 타입**과 **인스턴스 타입**을 전달해줄 수 있다.
+
+> **생성자 타입과 인스턴스 타입의 차이에 대하여**
+>
+> > 1.  **생성자 타입**
+> >     클래스 자체, `new` 키워드와 함께 새로운 객체를 만드는 함수의 타입이다.
+> >
+> > 2.  **인스턴스 타입**
+> >     클래스를 통해 만들어진 객체의 타입이다.
+
+```ts
+class Cylinder {
+  radius = 1
+  height = 1
+}
+
+type C = InstanceType<typeof Cylinder> // 타입이 Cylinder
+```
+
+`typeof Cylinder`는 **값 공간**에 있는 `Cylinder 클래스(생성자 함수)`의 타입을 추출한다. <br />
+`InstanceType`은 이 생성자 타입을 받아서, `new Cylinder()`로 만들어질 인스턴스의 타입인 `{ radius: number; height: number; }`를 `C`에 할당해준다.
+
+### 또한 **속성 접근자**도 주의해서 사용해야 한다.
+
+`obj['field']`와 `obj.field`는 값으로 사용할 때는 동일하게 작동하지만, 타입 공간에서는 다르게 작동한다. <br />
+🙅🏻‍♀️ **점(`.`) 표기법은 타입 공간에서 허용되지 않는다.**
+
+### 이 외에도 타입 공간과 값 공간에서 의미가 다른 패턴들이 있다.
+
+- `this`: 값으로 쓰일 때는 자바스크립트의 `this` 키워드이다. 반면, 타입으로 쓰일 때는 **'다형성 this'** 로, 서브클래스에서도 메서드 체인을 이어나갈 수 있도록 타입을 유연하게 만들어준다. <br />
+
+  🙅🏻‍♀️ **에러가 발생하는 코드** <br />
+  `Logger`의 `log 메서드`가 자기 자신을 반환하기 때문에, `logWithDate`를 쓸 수 없다.
+
+  ```ts
+  class Logger {
+    log(msg: string): Logger {
+      // 반환 타입이 'Logger'로 고정
+      console.log(msg)
+      return this
+    }
+  }
+
+  class ConsoleLogger extends Logger {
+    logWithDate(msg: string): ConsoleLogger {
+      console.log(new Date(), msg)
+      return this
+    }
+  }
+
+  const logger = new ConsoleLogger()
+  logger.log('hi').logWithDate('oops') // 타입 에러
+  ```
+
+  🙆🏻‍♀️ **올바른 코드** <br />
+  `Logger`의 `log 메서드`의 반환 타입이 'this'이기 때문에, 타입스크립트는 메서드를 호출한 인스턴스인 `ConsoleLogger` 타입으로 인식한다.
+
+  ```ts
+  class Logger {
+    log(msg: string): this {
+      // 반환 타입이 'this'로 유연하게 변경
+      console.log(msg)
+      return this
+    }
+  }
+  //... (이하 동일)
+
+  const logger = new ConsoleLogger()
+  logger.logWithDate('hi').log('oops')
+  ```
+
+- `&`와 `|`: 값에서는 비트 연산자(AND, OR)지만, 타입에서는 **인터섹션(두 타입의 속성을 모두 가짐)**과 **유니온(두 타입 중 하나)**을 의미한다.
+
+- `const`: 값에서 const는 변수를 선언하는 키워드이다. 하지만 `as const`는 리터럴 값의 타입을 **더 구체적인 리터럴 타입으로** 만들어준다.
+
+- `extends`: 클래스 상속이나 타입 상속을 정의하며, **제네릭 타입의 범위를 제한**하는 데 사용된다.
+
+- `in`: `for...in 루프`에서 객체의 키를 순회하거나, 매핑된 타입에서 속성을 정의할 때 쓰인다.
+
+### 구조 분해 할당 문법과 타입 표기 문법을 혼동하지 않도록 주의해야 한다.
+
+🙅🏻‍♀️ **에러가 발생하는 코드** <br />
+자바스크립트의 구조 분해 할당에서 `속성: 새로운 변수명`은 속성의 값을 새로운 변수명이라는 새로운 변수에 할당하라는 의미이기 때문에, 타입 공간과 값 공간이 충돌하여 에러가 발생하게 된다.
+
+```ts
+function processData({
+  name: string, // 오류: 'string'은 변수 이름으로 부적합합니다.
+  age: number, // 오류: 'number'도 변수 이름으로 부적합합니다.
+}) {
+  // ...
+}
+```
+
+🙆🏻‍♀️ **올바른 코드** <br />
+
+```ts
+function processData({ name, age }: { name: string; age: number }) {
+  console.log(`이름: ${name}, 나이: ${age}`)
+}
+
+processData({ name: 'hazel', age: 90 })
+```
